@@ -1,0 +1,888 @@
+{#{% extends "base.html" %}#}
+{##}
+{#{% block title %} Dashboard {% endblock %}#}
+{##}
+{#<!-- Element injected in the BODY element -->#}
+{#{% block body_class %} sidebar-mini {% endblock body_class %}#}
+{##}
+{#<!-- Specific Page CSS goes HERE  -->#}
+{#{% block stylesheets %}#}
+{##}
+{#  <!-- Google Font: Source Sans Pro -->#}
+{#  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">#}
+{#  <!-- Font Awesome -->#}
+{#  <link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css">#}
+{#  <!-- Ionicons -->#}
+{#  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">#}
+{#  <!-- Tempusdominus Bootstrap 4 -->#}
+{#  <link rel="stylesheet" href="/static/assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">#}
+{#  <!-- iCheck -->#}
+{#  <link rel="stylesheet" href="/static/assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css">#}
+{#  <!-- JQVMap -->#}
+{#  <link rel="stylesheet" href="/static/assets/plugins/jqvmap/jqvmap.min.css">#}
+{#  <!-- Theme style -->#}
+{#  <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">#}
+{#  <!-- overlayScrollbars -->#}
+{#  <link rel="stylesheet" href="/static/assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">#}
+{#  <!-- Daterange picker -->#}
+{#  <link rel="stylesheet" href="/static/assets/plugins/daterangepicker/daterangepicker.css">#}
+{#  <!-- summernote -->#}
+{#  <link rel="stylesheet" href="/static/assets/plugins/summernote/summernote-bs4.min.css">#}
+{##}
+{#{% endblock stylesheets %}#}
+{##}
+{#{% block content %}#}
+{##}
+{#  <div class="content-wrapper">#}
+{##}
+{#    <!-- Content Header (Page header) -->#}
+{#    <div class="content-header">#}
+{#      <div class="container-fluid">#}
+{#        <div class="row mb-2">#}
+{#          <div class="col-sm-6">#}
+{#            <h1 class="m-0 text-dark">Vehicle Detection Dashboard</h1>#}
+{#          </div><!-- /.col -->#}
+{#          <div class="col-sm-6">#}
+{#            <ol class="breadcrumb float-sm-right">#}
+{#              <li class="breadcrumb-item"><a href="index.html">Home</a></li>#}
+{#              <li class="breadcrumb-item active">View Detected Image</li>#}
+{#            </ol>#}
+{#          </div><!-- /.col -->#}
+{#        </div><!-- /.row -->#}
+{#      </div><!-- /.container-fluid -->#}
+{#    </div>#}
+{#    <!-- /.content-header -->#}
+{##}
+{#    <!-- Main content -->#}
+{#    <section class="content">#}
+{#      <div class="container-fluid">#}
+{#        <!-- Small boxes (Stat box) -->#}
+{#         <div class="row">#}
+{##}
+{#          <!-- ./col -->#}
+{#        </div>#}
+{##}
+{#		<!-- /.row -->#}
+{#        <!-- Main row -->#}
+{#        <div class="row">#}
+{#          <!-- Left col -->#}
+{#          <section class="col-lg-6 connectedSortable">#}
+{#            <!-- Custom tabs (Charts with tabs)-->#}
+{#            <div class="card">#}
+{#              <div class="card-header">#}
+{#                <h3 class="card-title">#}
+{#                  <i class="fas fa-chart-pie mr-1"></i>#}
+{#                  YOLOv9 Object Detection#}
+{#                </h3>#}
+{##}
+{##}
+{#              </div><!-- /.card-header -->#}
+{#              <div class="card-body">#}
+{#                <div class="tab-content p-0">#}
+{#                  <!-- Morris chart - Sales -->#}
+{#                  <div class="chart tab-pane active" id="revenue-chart"#}
+{#                        style="position: relative; height: 700px;">#}
+{##}
+{#			<!-- AI code-->#}
+{##}
+{#				   <form class="form-signin col-lg-3" method=post enctype=multipart/form-data name="form1">#}
+{##}
+{#        <h1 class="h3 mb-3 font-weight-normal">Upload any image or video</h1>#}
+{#     <input type="file" name="file" class="form-control-file" id="inputfile" >#}
+{##}
+{#        <br/>#}
+{##}
+{#        <button class="btn btn-block btn-default btn-sm " type="submit">Upload</button>#}
+{#  <p class="mt-5 mb-3 text-muted">Built using Pytorch & Flask</p>#}
+{#    </form>#}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{#                </div>#}
+{#              </div><!-- /.card-body -->#}
+{#            </div>#}
+{#            <!-- /.card -->#}
+{##}
+{##}
+{##}
+{#          </section>#}
+{##}
+{##}
+{#		            <section class="col-lg-6 connectedSortable">#}
+{#            <!-- Custom tabs (Charts with tabs)-->#}
+{#            <div class="card">#}
+{#              <div class="card-header">#}
+{#                <h3 class="card-title">#}
+{#                  <i class="fas fa-chart-pie mr-1"></i>#}
+{#                  YOLOv9 Object Detection Results#}
+{#                </h3>#}
+{##}
+{##}
+{#              </div><!-- /.card-header -->#}
+{#              <div class="card-body">#}
+{#                <div class="tab-content p-0">#}
+{#                  <!-- Morris chart - Sales -->#}
+{#                  <div class="chart tab-pane active" id="revenue-chart"#}
+{#                        style="position: relative; height: 700px;">#}
+{##}
+{#			<!-- AI code-->#}
+{##}
+{##}
+{##}
+{#<!-- detected image display -->#}
+{#<img id="my-image"  src="{{ url_for('predict_img', filename=image_path) }}" style="height:640; width:640px; display: none;"/>#}
+{##}
+{#<script>#}
+{#document.getElementById("my-image").onload = function() {#}
+{#  this.style.display = "block";#}
+{#};#}
+{#</script>#}
+{##}
+{#<!-- detected video display using opencv-->#}
+{#<img id="my-video-image" src="{{ url_for('video_feed') }}" style="height:640; width:640px; display: none;" />#}
+{##}
+{#<script>#}
+{#document.getElementById("my-video-image").onload = function() {#}
+{#  this.style.display = "block";#}
+{#};#}
+{#</script>#}
+{##}
+{##}
+{#<!-- AI code ends here-->#}
+{##}
+{#                    </div>#}
+{##}
+{#                </div>#}
+{#              </div><!-- /.card-body -->#}
+{#            </div>#}
+{#            <!-- /.card -->#}
+{##}
+{##}
+{##}
+{#          </section>#}
+{##}
+{##}
+{##}
+{#          <!-- /.Left col -->#}
+{#          <!-- right col (We are only adding the ID to make the widgets sortable)-->#}
+{##}
+{#          <!-- right col -->#}
+{#        </div>#}
+{#        <!-- /.row (main row) -->#}
+{#      </div><!-- /.container-fluid -->#}
+{#    </section>#}
+{#    <!-- /.content -->#}
+{##}
+{#  </div>#}
+{##}
+{#{% endblock content %}#}
+{##}
+{#<!-- Specific Page JS goes HERE  -->#}
+{#{% block javascripts %}#}
+{##}
+{#  <!-- jQuery -->#}
+{#  <script src="/static/assets/plugins/jquery/jquery.min.js"></script>#}
+{#  <!-- jQuery UI 1.11.4 -->#}
+{#  <script src="/static/assets/plugins/jquery-ui/jquery-ui.min.js"></script>#}
+{#  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->#}
+{#  <script>#}
+{#    $.widget.bridge('uibutton', $.ui.button)#}
+{#  </script>#}
+{#  <!-- Bootstrap 4 -->#}
+{#  <script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>#}
+{#  <!-- ChartJS -->#}
+{#  <script src="/static/assets/plugins/chart.js/Chart.min.js"></script>#}
+{#  <!-- Sparkline -->#}
+{#  <script src="/static/assets/plugins/sparklines/sparkline.js"></script>#}
+{#  <!-- JQVMap -->#}
+{#  <script src="/static/assets/plugins/jqvmap/jquery.vmap.min.js"></script>#}
+{#  <script src="/static/assets/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>#}
+{#  <!-- jQuery Knob Chart -->#}
+{#  <script src="/static/assets/plugins/jquery-knob/jquery.knob.min.js"></script>#}
+{#  <!-- daterangepicker -->#}
+{#  <script src="/static/assets/plugins/moment/moment.min.js"></script>#}
+{#  <script src="/static/assets/plugins/daterangepicker/daterangepicker.js"></script>#}
+{#  <!-- Tempusdominus Bootstrap 4 -->#}
+{#  <script src="/static/assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>#}
+{#  <!-- Summernote -->#}
+{#  <script src="/static/assets/plugins/summernote/summernote-bs4.min.js"></script>#}
+{#  <!-- overlayScrollbars -->#}
+{#  <script src="/static/assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>#}
+{#  <!-- AdminLTE App -->#}
+{#  <script src="/static/assets/js/adminlte.js"></script>#}
+{#  <!-- AdminLTE dashboard demo (This is only for demo purposes) -->#}
+{#  <script src="/static/assets/js/pages/dashboard.js"></script>#}
+{#  <!-- AdminLTE for demo purposes -->#}
+{#  <script src="/static/assets/js/demo.js"></script>#}
+{##}
+{#{% endblock javascripts %}#}
+
+
+
+
+
+
+
+
+
+
+
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Vehicle Detection</title>#}
+{#    <style>#}
+{#        body {#}
+{#            font-family: Arial, sans-serif;#}
+{#            margin: 0;#}
+{#            padding: 0;#}
+{#            background-color: #f4f4f4;#}
+{#        }#}
+{#        header {#}
+{#            background-color: #333;#}
+{#            color: white;#}
+{#            text-align: center;#}
+{#            padding: 10px;#}
+{#        }#}
+{#        #container {#}
+{#            display: flex;#}
+{#            justify-content: space-around;#}
+{#            margin-top: 20px;#}
+{#            padding: 20px;#}
+{#        }#}
+{#        #video-section {#}
+{#            width: 60%;#}
+{#            padding: 10px;#}
+{#            background-color: #fff;#}
+{#            border-radius: 8px;#}
+{#            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);#}
+{#        }#}
+{#        #info-section {#}
+{#            width: 35%;#}
+{#            padding: 10px;#}
+{#            background-color: #fff;#}
+{#            border-radius: 8px;#}
+{#            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);#}
+{#        }#}
+{#        #video-feed {#}
+{#            width: 100%;#}
+{#            height: auto;#}
+{#            border-radius: 8px;#}
+{#        }#}
+{#        .input-section {#}
+{#            text-align: center;#}
+{#            margin-bottom: 20px;#}
+{#        }#}
+{#        select, input[type="text"], button {#}
+{#            padding: 10px;#}
+{#            margin: 5px 0;#}
+{#            width: 80%;#}
+{#            border-radius: 5px;#}
+{#            border: 1px solid #ccc;#}
+{#        }#}
+{#        button {#}
+{#            background-color: #4CAF50;#}
+{#            color: white;#}
+{#            cursor: pointer;#}
+{#        }#}
+{#        button:hover {#}
+{#            background-color: #45a049;#}
+{#        }#}
+{#        .data-section {#}
+{#            margin-top: 20px;#}
+{#        }#}
+{#        #vehicle-count, #vehicle-category {#}
+{#            font-size: 20px;#}
+{#            margin-bottom: 10px;#}
+{#        }#}
+{#        #recent-detections {#}
+{#            margin-top: 20px;#}
+{#            font-size: 14px;#}
+{#        }#}
+{#        h3 {#}
+{#            font-size: 18px;#}
+{#            color: #333;#}
+{#        }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<header>#}
+{#    <h1>Vehicle Detection with YOLO</h1>#}
+{#</header>#}
+{##}
+{#<div class="input-section">#}
+{#    <form id="video-source-form" method="POST" action="/start_detection">#}
+{#        <label for="input_type">Select Input Type:</label>#}
+{#        <select name="input_type" id="input_type" required>#}
+{#            <option value="video">Video File</option>#}
+{#            <option value="rtsp">RTSP Stream</option>#}
+{#        </select><br>#}
+{#        <label for="input_value">Input Value (URL or File Path):</label>#}
+{#        <input type="text" id="input_value" name="input_value" placeholder="Enter file path or RTSP URL" required><br>#}
+{#        <button type="submit">Start Detection</button>#}
+{#    </form>#}
+{#</div>#}
+{##}
+{#<div id="container">#}
+{#    <div id="video-section">#}
+{#        <h3>Live Video Feed</h3>#}
+{#        <img id="video-feed" src="/video_feed" alt="Live feed">#}
+{#    </div>#}
+{##}
+{#    <div id="info-section">#}
+{#        <h3>Real-Time Data</h3>#}
+{#        <div id="vehicle-count">Vehicle Count: 0</div>#}
+{#        <div id="vehicle-category"></div>#}
+{#        <div id="recent-detections">#}
+{#            <h4>Recent Detections:</h4>#}
+{#            <ul id="recent-list"></ul>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<script>#}
+{#    const eventSource = new EventSource('/live_data');#}
+{#    eventSource.onmessage = function(event) {#}
+{#        const data = JSON.parse(event.data);#}
+{#        document.getElementById('vehicle-count').textContent = 'Vehicle Count: ' + data.vehicle_count;#}
+{#        document.getElementById('vehicle-category').innerHTML = 'Categories:<br>' +#}
+{#            Object.keys(data.counts).map(category => {#}
+{#                return `${category}: ${data.counts[category]}`;#}
+{#            }).join('<br>');#}
+{##}
+{#        // Update recent vehicles#}
+{#        const recentList = document.getElementById('recent-list');#}
+{#        recentList.innerHTML = '';#}
+{#        data.vehicles.forEach(vehicle => {#}
+{#            const li = document.createElement('li');#}
+{#            li.textContent = `${vehicle.timestamp}: ${vehicle.category}`;#}
+{#            recentList.appendChild(li);#}
+{#        });#}
+{#    };#}
+{#</script>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Vehicle Detection</title>#}
+{#    <style>#}
+{#        /* Base Styles */#}
+{#        body {#}
+{#            font-family: Arial, sans-serif;#}
+{#            margin: 0;#}
+{#            padding: 0;#}
+{#            background-color: #f4f4f4;#}
+{#        }#}
+{#        header {#}
+{#            background-color: #333;#}
+{#            color: white;#}
+{#            text-align: center;#}
+{#            padding: 10px;#}
+{#        }#}
+{#        #container {#}
+{#            display: flex;#}
+{#            justify-content: space-around;#}
+{#            margin-top: 20px;#}
+{#            padding: 20px;#}
+{#        }#}
+{#        #video-section {#}
+{#            width: 60%;#}
+{#            padding: 10px;#}
+{#            background-color: #fff;#}
+{#            border-radius: 8px;#}
+{#            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);#}
+{#        }#}
+{#        #info-section {#}
+{#            width: 35%;#}
+{#            padding: 10px;#}
+{#            background-color: #fff;#}
+{#            border-radius: 8px;#}
+{#            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);#}
+{#        }#}
+{#        #video-feed {#}
+{#            width: 100%;#}
+{#            height: auto;#}
+{#            border-radius: 8px;#}
+{#        }#}
+{#        .input-section {#}
+{#            text-align: center;#}
+{#            margin-bottom: 20px;#}
+{#        }#}
+{#        select, input[type="text"], button {#}
+{#            padding: 10px;#}
+{#            margin: 5px 5px;#}
+{#            width: 45%;#}
+{#            border-radius: 5px;#}
+{#            border: 1px solid #ccc;#}
+{#        }#}
+{#        button {#}
+{#            background-color: #4CAF50;#}
+{#            color: white;#}
+{#            cursor: pointer;#}
+{#            transition: background-color 0.3s;#}
+{#        }#}
+{#        button:hover {#}
+{#            background-color: #45a049;#}
+{#        }#}
+{#        .data-section {#}
+{#            margin-top: 20px;#}
+{#        }#}
+{#        #vehicle-count, #vehicle-category {#}
+{#            font-size: 20px;#}
+{#            margin-bottom: 10px;#}
+{#        }#}
+{#        #recent-detections {#}
+{#            margin-top: 20px;#}
+{#            font-size: 14px;#}
+{#        }#}
+{#        h3 {#}
+{#            font-size: 18px;#}
+{#            color: #333;#}
+{#        }#}
+{#        button.stop-button {#}
+{#            background-color: #f44336;#}
+{#        }#}
+{#        button.stop-button:hover {#}
+{#            background-color: #d32f2f;#}
+{#        }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<header>#}
+{#    <h1>Parking Detection System</h1>#}
+{#</header>#}
+{##}
+{#<div class="input-section">#}
+{#    <form id="video-source-form" method="POST" action="/start_detection">#}
+{#        <label for="input_type">Select Input Type:</label>#}
+{#        <select name="input_type" id="input_type" required>#}
+{#            <option value="video">Video File</option>#}
+{#            <option value="rtsp">RTSP Stream</option>#}
+{#        </select>#}
+{#        <input type="text" id="input_value" name="input_value" placeholder="Enter file path or RTSP URL" required>#}
+{#                <input type="number" id="line_y" name="line_y" placeholder="Enter crossing line position (optional)">#}
+{##}
+{#        <button type="button" id="start-btn">Start Detection</button>#}
+{#        <button type="button" id="stop-btn" class="stop-button">Stop Detection</button>#}
+{#    </form>#}
+{#</div>#}
+{##}
+{#<div id="container">#}
+{#    <div id="video-section">#}
+{#        <h3>Live Video Feed</h3>#}
+{#        <img id="video-feed" src="/video_feed" alt="Live feed">#}
+{#    </div>#}
+{##}
+{#    <div id="info-section">#}
+{#        <h3>Real-Time Data</h3>#}
+{#        <div id="vehicle-count">Vehicle Count: 0</div>#}
+{#        <div id="vehicle-category"></div>#}
+{#        <div id="recent-detections">#}
+{#            <h4>Recent Detections:</h4>#}
+{#            <ul id="recent-list"></ul>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<script>#}
+{#    // Event listener for Start Detection button#}
+{#    document.getElementById('start-btn').addEventListener('click', function() {#}
+{#        const inputType = document.getElementById('input_type').value;#}
+{#        const inputValue = document.getElementById('input_value').value;#}
+{##}
+{#        if (!inputValue) {#}
+{#            alert('Please provide a valid input.');#}
+{#            return;#}
+{#        }#}
+{##}
+{#        fetch('/start_detection', {#}
+{#            method: 'POST',#}
+{#            headers: { 'Content-Type': 'application/json' },#}
+{#            body: JSON.stringify({ input_type: inputType, input_value: inputValue })#}
+{#        })#}
+{#        .then(response => response.json())#}
+{#        .then(data => {#}
+{#            if (data.error) {#}
+{#                alert('Error: ' + data.error);#}
+{#            } else {#}
+{#                alert('Detection started successfully.');#}
+{#            }#}
+{#        })#}
+{#        .catch(err => {#}
+{#            console.error('Error starting detection:', err);#}
+{#        });#}
+{#    });#}
+{##}
+{#    // Event listener for Stop Detection button#}
+{#    document.getElementById('stop-btn').addEventListener('click', function() {#}
+{#        fetch('/stop_detection', {#}
+{#            method: 'POST'#}
+{#        })#}
+{#        .then(response => response.json())#}
+{#        .then(data => {#}
+{#            if (data.error) {#}
+{#                alert('Error: ' + data.error);#}
+{#            } else {#}
+{#                alert('Detection stopped successfully.');#}
+{#            }#}
+{#        })#}
+{#        .catch(err => {#}
+{#            console.error('Error stopping detection:', err);#}
+{#        });#}
+{#    });#}
+{##}
+{#    // Live data updates#}
+{#    const eventSource = new EventSource('/live_data');#}
+{#    eventSource.onmessage = function(event) {#}
+{#        const data = JSON.parse(event.data);#}
+{##}
+{#        // Update vehicle count#}
+{#        document.getElementById('vehicle-count').textContent = 'Vehicle Count: ' + data.vehicle_count;#}
+{##}
+{#        // Update category counts#}
+{#        document.getElementById('vehicle-category').innerHTML = 'Categories:<br>' +#}
+{#            Object.keys(data.counts).map(category => {#}
+{#                return `${category}: ${data.counts[category]}`;#}
+{#            }).join('<br>');#}
+{##}
+{#        // Update recent detections#}
+{#        const recentList = document.getElementById('recent-list');#}
+{#        recentList.innerHTML = '';#}
+{#        data.vehicles.forEach(vehicle => {#}
+{#            const li = document.createElement('li');#}
+{#            li.textContent = `${vehicle.timestamp}: ${vehicle.category}`;#}
+{#            recentList.appendChild(li);#}
+{#        });#}
+{#    };#}
+{#</script>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+
+
+
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Vehicle Detection</title>#}
+{#    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">#}
+{#</head>#}
+{#<body class="bg-gray-100">#}
+{##}
+{#<header class="bg-gray-800 text-white text-center py-4">#}
+{#    <h1 class="text-2xl font-bold">Parking Detection System</h1>#}
+{#</header>#}
+{##}
+{#<div class="container mx-auto mt-6">#}
+{#    <div class="flex justify-between mb-6">#}
+{#        <div class="w-3/5 bg-white shadow-md rounded-lg p-4">#}
+{#            <h3 class="text-lg font-semibold mb-4">Live Video Feed</h3>#}
+{#            <img id="video-feed" src="/video_feed" alt="Live feed" class="w-full rounded-lg">#}
+{#        </div>#}
+{##}
+{#        <div class="w-2/5 bg-white shadow-md rounded-lg p-4">#}
+{#            <h3 class="text-lg font-semibold mb-4">Real-Time Data</h3>#}
+{#            <div class="mb-4">#}
+{#                <label for="input_type" class="block mb-2">Select Input Type:</label>#}
+{#                <select name="input_type" id="input_type" required class="border border-gray-300 rounded-md p-2 w-full">#}
+{#                    <option value="video">Video File</option>#}
+{#                    <option value="rtsp">RTSP Stream</option>#}
+{#                </select>#}
+{#            </div>#}
+{##}
+{#            <div class="mb-4">#}
+{#                <input type="text" id="input_value" name="input_value" placeholder="Enter file path or RTSP URL" required#}
+{#                       class="border border-gray-300 rounded-md p-2 w-full">#}
+{#            </div>#}
+{##}
+{#            <div class="mb-4">#}
+{#                <input type="number" id="line_y" name="line_y" placeholder="Enter crossing line position (optional)"#}
+{#                       class="border border-gray-300 rounded-md p-2 w-full">#}
+{#            </div>#}
+{##}
+{#            <div class="flex justify-between mb-4">#}
+{#                <button type="button" id="start-btn"#}
+{#                        class="bg-green-500 text-white rounded-md p-2 hover:bg-green-600 transition duration-200 w-full mr-1">Start Detection#}
+{#                </button>#}
+{#                <button type="button" id="stop-btn"#}
+{#                        class="bg-red-500 text-white rounded-md p-2 hover:bg-red-600 transition duration-200 w-full ml-1">Stop Detection#}
+{#                </button>#}
+{#            </div>#}
+{##}
+{#            <!-- Display live vehicle count -->#}
+{#            <div id="vehicle-count" class="text-lg mb-2">Total Vehicle Count: <span id="total-vehicle-count">0</span></div>#}
+{##}
+{#            <!-- Display categories and their counts -->#}
+{#            <div id="vehicle-category"></div>#}
+{##}
+{#            <!-- Display recent detections -->#}
+{#            <div id="recent-detections" class="mt-4">#}
+{#                <h4 class="font-semibold">Recent Detections:</h4>#}
+{#                <ul id="recent-list" class="list-disc pl-5"></ul>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<script>#}
+{#    // Event listener for Start Detection button#}
+{#    document.getElementById('start-btn').addEventListener('click', function() {#}
+{#        const inputType = document.getElementById('input_type').value;#}
+{#        const inputValue = document.getElementById('input_value').value;#}
+{##}
+{#        if (!inputValue) {#}
+{#            alert('Please provide a valid input.');#}
+{#            return;#}
+{#        }#}
+{##}
+{#        fetch('/start_detection', {#}
+{#            method: 'POST',#}
+{#            headers: { 'Content-Type': 'application/json' },#}
+{#            body: JSON.stringify({ input_type: inputType, input_value: inputValue })#}
+{#        })#}
+{#        .then(response => response.json())#}
+{#        .then(data => {#}
+{#            if (data.error) {#}
+{#                alert('Error: ' + data.error);#}
+{#            } else {#}
+{#                alert('Detection started successfully.');#}
+{#            }#}
+{#        })#}
+{#        .catch(err => {#}
+{#            console.error('Error starting detection:', err);#}
+{#        });#}
+{#    });#}
+{##}
+{#    // Event listener for Stop Detection button#}
+{#    document.getElementById('stop-btn').addEventListener('click', function() {#}
+{#        fetch('/stop_detection', {#}
+{#            method: 'POST'#}
+{#        })#}
+{#        .then(response => response.json())#}
+{#        .then(data => {#}
+{#            if (data.error) {#}
+{#                alert('Error: ' + data.error);#}
+{#            } else {#}
+{#                alert('Detection stopped successfully.');#}
+{#            }#}
+{#        })#}
+{#        .catch(err => {#}
+{#            console.error('Error stopping detection:', err);#}
+{#        });#}
+{#    });#}
+{##}
+{#    // Live data updates#}
+{#    const eventSource = new EventSource('/live_data');#}
+{#    eventSource.onmessage = function(event) {#}
+{#        const data = JSON.parse(event.data);#}
+{##}
+{#        // Update total vehicle count#}
+{#        document.getElementById('total-vehicle-count').textContent = data.vehicle_count;#}
+{##}
+{#        // Update category counts#}
+{#        document.getElementById('vehicle-category').innerHTML = '<h4 class="font-semibold">Categories:</h4>' +#}
+{#            Object.keys(data.counts).map(category => `<div>${category}: ${data.counts[category]}</div>`).join('');#}
+{##}
+{#        // Update recent detections#}
+{#        const recentList = document.getElementById('recent-list');#}
+{#        recentList.innerHTML = '';#}
+{#        if (data.vehicles) {#}
+{#            data.vehicles.forEach(vehicle => {#}
+{#                const li = document.createElement('li');#}
+{#                li.textContent = `${vehicle.timestamp}: ${vehicle.category}`;#}
+{#                recentList.appendChild(li);#}
+{#            });#}
+{#        }#}
+{#    };#}
+{#</script>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+{###############--------adding chat.js for effective grapical representaion ---############}
+
+
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Detection</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+<header class="bg-gray-800 text-white text-center py-4">
+    <h1 class="text-2xl font-bold">Parking Detection System</h1>
+</header>
+
+<div class="container mx-auto mt-6">
+    <div class="flex justify-between mb-6">
+        <div class="w-3/5 bg-white shadow-md rounded-lg p-4">
+            <h3 class="text-lg font-semibold mb-4">Live Video Feed</h3>
+            <img id="video-feed" src="/video_feed" alt="Live feed" class="w-full rounded-lg">
+        </div>
+
+        <div class="w-2/5 bg-white shadow-md rounded-lg p-4">
+            <h3 class="text-lg font-semibold mb-4">Real-Time Data</h3>
+            <div class="mb-4">
+                <label for="input_type" class="block mb-2">Select Input Type:</label>
+                <select name="input_type" id="input_type" required class="border border-gray-300 rounded-md p-2 w-full">
+                    <option value="video">Video File</option>
+                    <option value="rtsp">RTSP Stream</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <input type="text" id="input_value" name="input_value" placeholder="Enter file path or RTSP URL" required
+                       class="border border-gray-300 rounded-md p-2 w-full">
+            </div>
+
+            <div class="mb-4">
+                <input type="number" id="line_y" name="line_y" placeholder="Enter crossing line position (optional)"
+                       class="border border-gray-300 rounded-md p-2 w-full">
+            </div>
+
+            <div class="flex justify-between mb-4">
+                <button type="button" id="start-btn"
+                        class="bg-green-500 text-white rounded-md p-2 hover:bg-green-600 transition duration-200 w-full mr-1">Start Detection
+                </button>
+                <button type="button" id="stop-btn"
+                        class="bg-red-500 text-white rounded-md p-2 hover:bg-red-600 transition duration-200 w-full ml-1">Stop Detection
+                </button>
+            </div>
+
+            <!-- Display live vehicle count -->
+            <div id="vehicle-count" class="text-lg mb-2">Total Vehicle Count: <span id="total-vehicle-count">0</span></div>
+
+            <!-- Display categories and their counts -->
+            <div id="vehicle-category"></div>
+
+            <!-- Display recent detections -->
+            <div id="recent-detections" class="mt-4">
+                <h4 class="font-semibold">Recent Detections:</h4>
+                <ul id="recent-list" class="list-disc pl-5"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Event listener for Start Detection button
+    document.getElementById('start-btn').addEventListener('click', function() {
+        const inputType = document.getElementById('input_type').value;
+        const inputValue = document.getElementById('input_value').value;
+
+        if (!inputValue) {
+            alert('Please provide a valid input.');
+            return;
+        }
+
+        fetch('/start_detection', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ input_type: inputType, input_value: inputValue })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Error: ' + data.error);
+            } else {
+                alert('Detection started successfully.');
+            }
+        })
+        .catch(err => {
+            console.error('Error starting detection:', err);
+        });
+    });
+
+    // Event listener for Stop Detection button
+    document.getElementById('stop-btn').addEventListener('click', function() {
+        fetch('/stop_detection', {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Error: ' + data.error);
+            } else {
+                alert('Detection stopped successfully.');
+            }
+        })
+        .catch(err => {
+            console.error('Error stopping detection:', err);
+        });
+    });
+
+    // Live data updates
+    const eventSource = new EventSource('/live_data');
+    eventSource.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+
+        // Update total vehicle count
+        document.getElementById('total-vehicle-count').textContent = data.vehicle_count;
+
+        // Update category counts
+        document.getElementById('vehicle-category').innerHTML = '<h4 class="font-semibold">Categories:</h4>' +
+            Object.keys(data.counts).map(category => `<div>${category}: ${data.counts[category]}</div>`).join('');
+
+        // Update recent detections
+        const recentList = document.getElementById('recent-list');
+        recentList.innerHTML = '';
+        if (data.vehicles) {
+            data.vehicles.forEach(vehicle => {
+                const li = document.createElement('li');
+                li.textContent = `${vehicle.timestamp}: ${vehicle.category}`;
+                recentList.appendChild(li);
+            });
+        }
+    };
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
