@@ -166,10 +166,6 @@
 #     app.run(host="0.0.0.0", port=args.port)
 
 
-
-
-
-
 # import argparse
 # from flask import Flask, render_template, request, Response, jsonify
 # import cv2
@@ -283,13 +279,6 @@
 #     parser.add_argument("--port", default=5000, type=int, help="Port number")
 #     args = parser.parse_args()
 #     app.run(host="0.0.0.0", port=args.port)
-
-
-
-
-
-
-
 # import os
 # import sqlite3
 # import cv2
@@ -394,11 +383,6 @@
 #
 # if __name__ == "__main__":
 #     app.run(debug=True)
-
-
-
-
-
 # from flask import Flask, render_template, request, Response, jsonify, stream_with_context
 # import cv2
 # import sqlite3
@@ -535,12 +519,6 @@
 #
 # if __name__ == "__main__":
 #     app.run(host="0.0.0.0", port=5000)
-
-
-
-
-
-
 # from flask import Flask, render_template, request, Response, jsonify, stream_with_context
 # import cv2
 # import sqlite3
@@ -698,12 +676,6 @@
 #
 # if __name__ == "__main__":
 #     app.run(debug=True, host="0.0.0.0", port=5000)
-
-
-
-
-
-
 # from flask import Flask, render_template, request, Response, jsonify, stream_with_context
 # import cv2
 # import sqlite3
@@ -842,12 +814,7 @@
 # if __name__ == "__main__":
 #     logging.basicConfig(level=logging.INFO)
 #     app.run(debug=True, host="0.0.0.0", port=5000)
-
-
-
-
 ###########-----changes after adding  stop button----#########
-
 # from flask import Flask, render_template, request, Response, jsonify, stream_with_context
 # import cv2
 # import sqlite3
@@ -1065,10 +1032,7 @@
 # if __name__ == "__main__":
 #     logging.basicConfig(level=logging.INFO)
 #     app.run(debug=True, host="0.0.0.0", port=5000)
-
-
 ########--------changes after adding customized horizontal line and automatic lane detection----#####
-
 # from flask import Flask, render_template, request, Response, jsonify
 # import cv2
 # import sqlite3
@@ -1318,29 +1282,22 @@
 # if __name__ == "__main__":
 #     logging.basicConfig(level=logging.INFO)
 #     app.run(debug=True, host="0.0.0.0", port=5000)
-
-
-
-
-
-
-
 # #########---------Updated Python Code for Proportional Crossing Line
-# Add the following logic to dynamically calculate the road edges and adjust the crossing line accordingly:----########
 
-
-
-from flask import Flask, render_template, request, Response, jsonify
-import cv2
-import sqlite3
-import threading
-from ultralytics import YOLO
-from datetime import datetime
-import time
+import csv
 import json
 import logging
-import torch
+import sqlite3
+import threading
+import time
+from datetime import datetime
+from io import StringIO
+import cv2
 import numpy as np
+import torch
+from flask import Flask, render_template, request, Response, jsonify, make_response
+from ultralytics import YOLO
+
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -1405,6 +1362,33 @@ def store_detection(timestamp, category):
 def home():
     """Serve the homepage."""
     return render_template("index.html")
+
+@app.route('/download_csv', methods=['POST'])
+def download_csv():
+    start_date = request.form.get('start_date')
+    end_date = request.form.get('end_date')
+
+    # Fetch data from the database
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+    query = """
+        SELECT timestamp, category
+        FROM vehicle_log
+        WHERE timestamp BETWEEN ? AND ?
+    """
+    cursor.execute(query, (start_date, end_date))
+    rows = cursor.fetchall()
+    conn.close()
+
+    # Generate CSV file in memory
+    si = StringIO()
+    writer = csv.writer(si)
+    writer.writerow(['Timestamp', 'Category'])  # CSV headers
+    writer.writerows(rows)
+    output = make_response(si.getvalue())
+    output.headers["Content-Disposition"] = f"attachment; filename=vehicle_data_{start_date}_to_{end_date}.csv"
+    output.headers["Content-type"] = "text/csv"
+    return output
 
 
 @app.route("/start_detection", methods=["POST"])
