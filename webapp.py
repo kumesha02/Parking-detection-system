@@ -1361,7 +1361,7 @@ def store_detection(timestamp, category):
 @app.route("/")
 def home():
     """Serve the homepage."""
-    return render_template("index.html")
+    return render_template("footer.html")
 
 @app.route('/download_csv', methods=['POST'])
 def download_csv():

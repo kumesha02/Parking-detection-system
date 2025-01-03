@@ -5,3 +5,172 @@
 {#    <div class="float-right d-none d-sm-inline-block">#}
 {#    </div>#}
 {#  </footer>#}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Detection System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+<header class="bg-gray-800 text-white text-center py-4">
+    <h1 class="text-2xl font-bold">Parking Detection System</h1>
+</header>
+
+<div class="container mx-auto mt-6">
+    <div class="flex justify-between mb-6">
+        <!-- Live Video Feed Section -->
+        <div class="w-3/5 bg-white shadow-md rounded-lg p-4">
+            <h3 class="text-lg font-semibold mb-4">Live Video Feed</h3>
+            <img id="video-feed" src="/video_feed" alt="Live feed" class="w-full rounded-lg">
+        </div>
+
+        <!-- Real-Time Data Section -->
+        <div class="w-2/5 bg-white shadow-md rounded-lg p-4">
+            <h3 class="text-lg font-semibold mb-4">Real-Time Data</h3>
+            <div class="mb-4">
+                <label for="input_type" class="block mb-2">Select Input Type:</label>
+                <select name="input_type" id="input_type" required class="border border-gray-300 rounded-md p-2 w-full">
+                    <option value="video">Video File</option>
+                    <option value="rtsp">RTSP Stream</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <input type="text" id="input_value" name="input_value" placeholder="Enter file path or RTSP URL" required
+                       class="border border-gray-300 rounded-md p-2 w-full">
+            </div>
+
+            <div class="mb-4">
+                <input type="number" id="line_y" name="line_y" placeholder="Enter crossing line position (optional)"
+                       class="border border-gray-300 rounded-md p-2 w-full">
+            </div>
+
+            <div class="flex justify-between mb-4">
+                <button type="button" id="start-btn"
+                        class="bg-green-500 text-white rounded-md p-2 hover:bg-green-600 transition duration-200 w-full mr-1">Start Detection
+                </button>
+                <button type="button" id="stop-btn"
+                        class="bg-red-500 text-white rounded-md p-2 hover:bg-red-600 transition duration-200 w-full ml-1">Stop Detection
+                </button>
+            </div>
+
+            <!-- Display live vehicle count -->
+            <div id="vehicle-count" class="text-lg mb-2">Total Vehicle Count: <span id="total-vehicle-count">0</span></div>
+
+            <!-- Display categories and their counts -->
+            <div id="vehicle-category"></div>
+
+            <!-- Display recent detections -->
+            <div id="recent-detections" class="mt-4">
+                <h4 class="font-semibold">Recent Detections:</h4>
+                <ul id="recent-list" class="list-disc pl-5"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vehicle Data Export Section -->
+    <div class="w-full bg-white shadow-md rounded-lg p-4 mt-6">
+        <h3 class="text-lg font-semibold mb-4">Vehicle Data Export</h3>
+        <form action="/download_csv" method="POST" class="flex flex-col">
+            <div class="mb-4">
+                <label for="start_date" class="block mb-2 font-medium text-gray-700">Start Date & Time:</label>
+                <input type="datetime-local" id="start_date" name="start_date" required
+                       class="border border-gray-300 rounded-md p-2 w-full">
+            </div>
+            <div class="mb-4">
+                <label for="end_date" class="block mb-2 font-medium text-gray-700">End Date & Time:</label>
+                <input type="datetime-local" id="end_date" name="end_date" required
+                       class="border border-gray-300 rounded-md p-2 w-full">
+            </div>
+            <button type="submit"
+                    class="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 transition duration-200 w-full">
+                Download CSV
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Event listener for Start Detection button
+    document.getElementById('start-btn').addEventListener('click', function() {
+        const inputType = document.getElementById('input_type').value;
+        const inputValue = document.getElementById('input_value').value;
+
+        if (!inputValue) {
+            alert('Please provide a valid input.');
+            return;
+        }
+
+        fetch('/start_detection', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ input_type: inputType, input_value: inputValue })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Error: ' + data.error);
+            } else {
+                alert('Detection started successfully.');
+            }
+        })
+        .catch(err => {
+            console.error('Error starting detection:', err);
+        });
+    });
+
+    // Event listener for Stop Detection button
+    document.getElementById('stop-btn').addEventListener('click', function() {
+        fetch('/stop_detection', {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Error: ' + data.error);
+            } else {
+                alert('Detection stopped successfully.');
+            }
+        })
+        .catch(err => {
+            console.error('Error stopping detection:', err);
+        });
+    });
+
+    // Live data updates
+    const eventSource = new EventSource('/live_data');
+    eventSource.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+
+        // Update total vehicle count
+        document.getElementById('total-vehicle-count').textContent = data.vehicle_count;
+
+        // Update category counts
+        document.getElementById('vehicle-category').innerHTML = '<h4 class="font-semibold">Categories:</h4>' +
+            Object.keys(data.counts).map(category => `<div>${category}: ${data.counts[category]}</div>`).join('');
+
+        // Update recent detections
+        const recentList = document.getElementById('recent-list');
+        recentList.innerHTML = '';
+        if (data.vehicles) {
+            data.vehicles.forEach(vehicle => {
+                const li = document.createElement('li');
+                li.textContent = `${vehicle.category} detected at ${vehicle.timestamp}`;
+                recentList.appendChild(li);
+            });
+        }
+    };
+
+    // Close the event source on page unload
+    window.addEventListener('beforeunload', () => {
+        eventSource.close();
+    });
+</script>
+
+</body>
+</html>
